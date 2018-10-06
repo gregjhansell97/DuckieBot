@@ -1,0 +1,5 @@
+Installed python modules
+pip
+numpy
+matplotlib
+opencv-python
