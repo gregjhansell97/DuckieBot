@@ -1,0 +1,52 @@
+body, html {
+	margin:0;
+	padding:0;
+	max-height:100%;
+}
+.dashboard {
+	width:100%;
+	height:40%;
+	position:absolute;
+	bottom:0;
+	background-color:transparent;
+	overflow: hidden;
+}
+#dashcolor {
+	height: 200%;
+  	width: 200%;
+  	background-color: gray;
+  	border-radius: 100%;
+  	position: absolute;
+  	left:-50%;
+}
+.steeringwheel {
+	position:absolute;
+	left:10%;
+}
+.steeringbutton {
+	height: 5vw;
+	width: 5vw;
+	font-family: Arial;
+	font-size: 2vw;
+	color:white;
+	border-radius: 20px;
+	background-color:purple;
+	position:absolute;
+}
+button:focus {outline:0;}
+#w {
+	left:22%;
+	top:40%;
+}
+#a {
+	left:calc(22% - 5vw - 10px);
+	top:calc(40% + 5vw + 10px);
+}
+#s {
+	left:22%;
+	top:calc(40% + 5vw + 10px);
+}
+#d {
+	left:calc(22% + 5vw + 10px);
+	top:calc(40% + 5vw + 10px);
+}
