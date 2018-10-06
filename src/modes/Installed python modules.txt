@@ -1,0 +1,4 @@
+Installed python modules
+pip
+Numpy
+Matplotlib
