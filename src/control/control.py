@@ -29,11 +29,11 @@ class Control:
         self._omega = omega
         self._motor_accel = motor_accel
 
-        _calibration = {}
-        _calibration["offset_left"] = 0
-        _calibration["gain_left"] = 1
-        _calibration["offset_right"] = 0
-        _calibration["gain_right"] = 1
+        self._calibration = {}
+        self._calibration["offset_left"] = 0
+        self._calibration["gain_left"] = 1
+        self._calibration["offset_right"] = 0
+        self._calibration["gain_right"] = 1
         
         pass
     
