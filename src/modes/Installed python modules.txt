@@ -1,4 +1,5 @@
 Installed python modules
 pip
-Numpy
-Matplotlib
+numpy
+matplotlib
+opencv-python
