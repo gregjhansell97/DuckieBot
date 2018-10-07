@@ -14,8 +14,8 @@ class Driver(AbstractMode):
 
         #forces applied to speeds
         Forces = namedtuple("Forces", ["applied", "drag"])
-        self.speed_forces = Forces(applied=0.3, drag=0.2)
-        self.omega_forces = Forces(applied=0.3, drag=0.2)
+        self.speed_forces = Forces(applied=0.7, drag=0.5)
+        self.omega_forces = Forces(applied=1, drag=0.8)
 
         #speeds themselves
         self.speed = 0

@@ -9,6 +9,8 @@ var mode = document.getElementById('mode');
 var currentmode = 0;
 var test = '';
 var modes = document.getElementById("modes").innerHTML;
+var apressed = false;
+var dpressed = false;
 modes = modes.replace(/'|\[|]| /g, '').split(',');
 // console.log(modes);
 // var modes = JSON.parse('{{ modes | tojson | safe }}');
@@ -271,22 +273,22 @@ var keyboardMap = [
 	"PA1", // [253]
 	"WIN_OEM_CLEAR", // [254]
 	"" // [255]
-];
+	];
 
 //Key Listener
 window.addEventListener('keydown', function (e) {
 	if(!(e.keyCode in keysdown)){
 		keysdown[e.keyCode] = true;
-        var kee = e.keyCode;
-        chr = keyboardMap[kee];
+		var kee = e.keyCode;
+		chr = keyboardMap[kee];
         // console.log(chr);
         
-		var xhttp = new XMLHttpRequest();
-		xhttp.open("POST", "/key_action", true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("action=true&key=" + chr);
-	}
-	var key = e.keyCode ? e.keyCode : e.which;
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/key_action", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("action=true&key=" + chr);
+    }
+    var key = e.keyCode ? e.keyCode : e.which;
 	//W key
 	if (key == 87) {
 		wbutton.style.backgroundColor = 'white';
@@ -295,11 +297,18 @@ window.addEventListener('keydown', function (e) {
 	} 
    //A key: rotate wheel CCW
    if (key == 65) {
+   	apressed = true;
    	abutton.style.backgroundColor = 'white';
    	abutton.style.color = 'gray';
    	abutton.style.borderColor = 'gray';
-   	wheelangle -= 1;
-   	rotate(wheel, wheelangle);
+   	if (wheelangle >= -60){
+   		wheelangle -= 1;
+   	}
+   	if (!dpressed){
+   		rotate(wheel, wheelangle);
+   	}
+   	else {
+   	}
    }
    //S key
    if (key == 83) {
@@ -309,11 +318,18 @@ window.addEventListener('keydown', function (e) {
    }
    //D key: rotate wheel CW
    if (key == 68) {
+   	dpressed = true;
    	dbutton.style.backgroundColor = 'white';
    	dbutton.style.color = 'gray';
    	dbutton.style.borderColor = 'gray';
-   	wheelangle += 1;
-   	rotate(wheel, wheelangle);
+   	if (wheelangle <= 60){
+   		wheelangle += 1;
+   	}
+   	if (!apressed){
+   		rotate(wheel, wheelangle);
+   	}
+   	else {
+   	}
    }
    	//Enter key: change mode
    	if (key == 13){
@@ -323,11 +339,11 @@ window.addEventListener('keydown', function (e) {
    		else {
    			currentmode = 0;
    		}
-		mode.innerHTML = "Current Mode: " + modes[currentmode];
-		var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "/change_mode", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("mode="+modes[currentmode]);
+   		mode.innerHTML = "Current Mode: " + modes[currentmode];
+   		var xhttp = new XMLHttpRequest();
+   		xhttp.open("POST", "/change_mode", true);
+   		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+   		xhttp.send("mode="+modes[currentmode]);
    	}
    })
 window.addEventListener('keyup', function (e) {
@@ -353,6 +369,7 @@ window.addEventListener('keyup', function (e) {
 	} 
    //A key
    if (key == 65) {
+   	apressed = false;
    	abutton.style.backgroundColor = 'transparent';
    	abutton.style.color = 'white';
    	abutton.style.borderColor = 'white';
@@ -366,6 +383,7 @@ window.addEventListener('keyup', function (e) {
    }
    //D key
    if (key == 68) {
+   	dpressed = false;
    	dbutton.style.backgroundColor = 'transparent';
    	dbutton.style.color = 'white';
    	dbutton.style.borderColor = 'white';
@@ -373,11 +391,10 @@ window.addEventListener('keyup', function (e) {
    }           
 })
 function rotate(obj, angle) {
-	if (Math.abs(wheelangle) <= 15) {
-		obj.style.transform = "rotate("+angle*5+"deg)";
+	if (Math.abs(wheelangle) <= 60) {
+		obj.style.transform = "rotate("+angle+"deg)";
 	}
-	else {
-	}
+	else {	}
 }
 function returnToZero(obj, dir) {
 	var timer = setInterval(function() {
@@ -391,7 +408,7 @@ function returnToZero(obj, dir) {
 			wheelangle += 1;
 		}
 		obj.style.transform = "rotate("+wheelangle+"deg)";
-	}, 20);
+	}, 25);
 }
 
 //Clock

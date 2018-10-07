@@ -40,9 +40,9 @@ class Unicycle:
         self._motor_accel = motor_accel
 
         self._calibration = {}
-        self._calibration["offset_left"] = 0
+        self._calibration["offset_left"] = 0.2
         self._calibration["gain_left"] = 1
-        self._calibration["offset_right"] = 0
+        self._calibration["offset_right"] = 0.2
         self._calibration["gain_right"] = 1
 
         self._mh = Adafruit_MotorHAT(addr=0x60)
@@ -90,26 +90,30 @@ class Unicycle:
         Ramps the motor speeds based on calibration values and maximum acceleration
         '''
         
-        speed_left = (self._speed / 2 - self._omega / 2)
-        speed_right = (self._speed / 2 + self._omega / 2)
+        speed_left = (self._speed *0.7 - self._omega *0.3)
+        speed_right = (self._speed *0.7 + self._omega *0.3)
         
 
         if speed_left > 0:
+            speed_left = self._calibration["offset_left"] + speed_left*(1-self._calibration["offset_left"])
             self._left_motor.setSpeed(int(speed_left*255))
             self._left_motor.run(Adafruit_MotorHAT.FORWARD)
         elif speed_left == 0:
             self._left_motor.setSpeed(0)
         else: # speed_left < 0
-            self._left_motor.setSpeed(int(-speed_left*255))
+            speed_left = self._calibration["offset_left"] - speed_left*(1-self._calibration["offset_left"])
+            self._left_motor.setSpeed(int(speed_left*255))
             self._left_motor.run(Adafruit_MotorHAT.BACKWARD)
 
         if speed_right > 0:
+            speed_right = self._calibration["offset_right"] + speed_right*(1-self._calibration["offset_right"])
             self._right_motor.setSpeed(int(speed_right*255))
             self._right_motor.run(Adafruit_MotorHAT.FORWARD)
         elif speed_right == 0:
             self._right_motor.setSpeed(0)
         else: # speed_right < 0
-            self._right_motor.setSpeed(int(-speed_right*255))
+            speed_right = self._calibration["offset_right"] - speed_right*(1-self._calibration["offset_right"])
+            self._right_motor.setSpeed(int(speed_right*255))
             self._right_motor.run(Adafruit_MotorHAT.BACKWARD)
 if __name__ == "__main__":
     u = Unicycle()
