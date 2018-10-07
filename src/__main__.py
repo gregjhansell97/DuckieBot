@@ -8,20 +8,31 @@ from picamera.array import PiRGBArray
 import time
 app = Flask(__name__)
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['GET'])
 def index():
     '''
-    Routes for index, handles commands from user, serves main page
+    Routes for index, serves main page
    
     Returns: view of index.html
-    '''
+    '''    
+    modes=["Driver","Line Follower","Drunk Driver","Mirror"]
+    return render_template('index.html',modes=modes)
+
+@app.route('/key_action', methods=['POST'])
+def key_action():
     if request.method == 'POST':
         key = request.form['key']
         action = request.form['action']
         print("KEY: ", key," ACTION:", action)
-    modes=["Driver","Line Follower","Drunk Driver","Mirror"]
-    return render_template('index.html',modes=modes)
+    return '';
 
+@app.route('/change_mode', methods=['POST'])
+def change_mode():
+    if request.method == 'POST':
+        mode = request.form['mode']
+        print("mode: ",mode)
+    return '';
+        
 def process_frame():
     '''
     Function to process camera frames continuously and send them to the app

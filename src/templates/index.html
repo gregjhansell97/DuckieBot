@@ -5,6 +5,7 @@
 <body>
     <h1>Video Steaming Demonstration</h1>
     <p id='modes' style="display:none">{{ modes }}</p>
+    <button id='butoon'>butoon</button>
     <img src="{{ url_for('video_feed') }}">
 </body>
 </html>
@@ -282,9 +283,9 @@
         
         
             var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "/", true);
+            xhttp.open("POST", "/key_action", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("action=down&key=" + chr);
+            xhttp.send("action=true&key=" + chr);
         }
     })
     window.addEventListener('keyup', function (e) {
@@ -297,11 +298,17 @@
 
 
             var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "/", true);
+            xhttp.open("POST", "/key_action", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("action=up&key=" + chr);
+            xhttp.send("action=false&key=" + chr);
         
     })
-    
+
+    document.getElementById("butoon").onclick = function(){
+    var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "/change_mode", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("mode=Driver");
+    }
 
 </script>
