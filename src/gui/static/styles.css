@@ -132,9 +132,9 @@ button:focus {outline:0;}
 #vidstream{
 	position:absolute;
 	height: 65%;
-	width: 90%;
+	width: 80%;
 	display: block;
-	left:5%;
+	left:10%;
 }
 
 #modes{
