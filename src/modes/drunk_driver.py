@@ -69,4 +69,5 @@ class DrunkDriver(AbstractMode):
     def frame(self, frame):
         '''
         '''
-        return frame
+        blur = cv2.GaussianBlur(frame,(20,20),0)
+        return blur
