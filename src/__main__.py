@@ -23,7 +23,7 @@ def index():
     Returns: 
         Template: view of index.html
     '''    
-    modes=["Driver","Line Follower","Drunk Driver","Mirror"]
+    modes=["Driver","LineFollower","DrunkDriver","Mirror"]
     return render_template('index.html',modes=modes)
 
 @app.route('/key_action', methods=['POST'])
@@ -31,7 +31,8 @@ def key_action():
     if request.method == 'POST':
         key = request.form['key']
         pressed = request.form['action']
-        driver.set_input(key, pressed)
+        # driver.set_input(key, pressed)
+        print('key: ',key)
     return '';
 
 @app.route('/change_mode', methods=['POST'])
