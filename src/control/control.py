@@ -2,6 +2,15 @@
 control.py runs the PWM code to drive the motors, and get input for a desired tangential and rotational speed
 
 '''
+
+'''
+Import Adafruit_MotorHAT for driving the motors
+'''
+from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+import time
+import atexit
+mh = Adafruit_MotorHAT(addr=0x60)
+
 class Control:
     '''
     Controls the speed of the car based on desired tangential and rotational speed.
@@ -16,8 +25,9 @@ class Control:
 
 
     def __init__(self,  motor_accel=0, speed=0, omega=0):
+        
         '''
-        <description>: delete this constructor when you're done with it alex,
+        delete this constructor when you're done with it alex,
         keep variables lower case and under score dO nOT uSeD cAmeL cAsE
 
         Args:
@@ -39,28 +49,55 @@ class Control:
     
     def set_omega(self, omega):
         '''
-        <description>: Set rotational speed
+        Set rotational speed
 
         Args:
             omega(float): Rotational speed between -1 and 1. 0 is no turning, >0 is turning left
         '''
+        omega = 0 
+        ''' input (range?)'''
+
         pass
 
-     def set_speed(self, speed):
+    def set_speed(self, speed):
         '''
-        <description>: Set car speed
+        Set car speed
 
         Args:
             speed(float): Tangential speed between -1 and 1. 0 is no tangential speed, >0 is forward 
         '''
+        
+        speed = 0 
+        ''' input (range?)'''
+        
         pass
 
+    def turnOffMotors():
+        mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
+        mh.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
+
+    atexit.register(turnOffMotors)
+
     def _set_motor_speed(self, speed_left, speed_right):
+        
         '''
-        <description>: Ramps the motor speeds based on calibration values and maximum acceleration
+        Ramps the motor speeds based on calibration values and maximum acceleration
 
         Args:
             speed_left(float): Speed of the left motor, between -1 and 1. 0 is off, >1 is forward
             speed_right(float): Speed of the right motor, between -1 and 1. 0 is off, >1 is forward
         '''
+        '''
+        speed_left = (self.speed / 2 + self.omega / 2)*self._calibration[gain left]
+        speed_right = (self.speed / 2 - self.omega / 2)*self._calibration[gain right]
+        '''        
+        speed_left = 30
+        speed_right = 40
+        myMotor = mh.getMotor(1)
+        myMotor.setSpeed(speed_left)
+        myMotor.run(Adafruit_MotorHAT.FORWARD)
+        myMotor = mh.getMotor(2)
+        myMotor.setSpeed(speed_right)
+        myMotor.run(Adafruit_MotorHAT.FORWARD)
+
         pass

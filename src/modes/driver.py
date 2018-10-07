@@ -24,10 +24,11 @@ class Driver:
             self.omega = 0
         
         if "up" in next_pressed:
-            self.speed += 
+            pass
+            #self.speed += 
       
-        self._keys_pressed = 
-       pass
+        #self._keys_pressed = 
+       #pass
 
     def frame(self, frame):
         return frame
