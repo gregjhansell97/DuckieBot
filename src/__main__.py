@@ -13,6 +13,11 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    '''
+    Routes for index, handles commands from user, serves main page
+   
+    Returns: view of index.html
+    '''
     if request.method == 'POST':
         key = request.form['key']
         action = request.form['action']
@@ -40,6 +45,11 @@ def index():
 #             b'Content-Type: image/jpeg\r\n\r\n' + jpg.tostring() + b'\r\n')
 
 def process_frame():
+    '''
+    Function to process camera frames continuously and send them to the app
+    
+    Returns: no return value, constantly yields jpg images to front end
+    '''
     cap = cv2.VideoCapture(0)
     print ("capture:", cap)
     while True:
@@ -50,6 +60,11 @@ def process_frame():
 
 @app.route('/video_feed')
 def video_feed():
+    '''
+    Route for video feed
+    
+    Returns: response to front end after calling process_frame function.
+    '''
     return Response(process_frame(),
         mimetype='multipart/x-mixed-replace; boundary=--jpgboundary')
 
