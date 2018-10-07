@@ -9,6 +9,15 @@ import time
 from modes import Driver
 from controls import Unicycle
 
+
+# initialize the camera and grab a reference to the raw camera capture
+camera = PiCamera(framerate=32, resolution=(640, 480))
+rawCapture = PiRGBArray(camera, size=(640, 480))
+
+# allow the camera to warmup
+time.sleep(0.1)
+
+
 #globals "eyes roll but such is flask" -daemon the koala
 app = Flask(
     "__main__",
@@ -52,12 +61,6 @@ def process_frame():
     '''
     Function to process camera frames continuously and send them to the app
     '''
-    # initialize the camera and grab a reference to the raw camera capture
-    camera = PiCamera(framerate=32, resolution=(640, 480))
-    rawCapture = PiRGBArray(camera, size=(640, 480))
-
-    # allow the camera to warmup
-    time.sleep(0.1)
 
     # capture frames from the camera
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):

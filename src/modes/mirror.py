@@ -1,10 +1,11 @@
 #external modules
 from collections import namedtuple
+import cv2
 
 #local modules
 from modes.mode import AbstractMode
 
-class Driver(AbstractMode):
+class Mirror(AbstractMode):
     '''
     '''
     def __init__(self, car=None):
@@ -14,8 +15,8 @@ class Driver(AbstractMode):
 
         #forces applied to speeds
         Forces = namedtuple("Forces", ["applied", "drag"])
-        self.speed_forces = Forces(applied=0.7, drag=0.5)
-        self.omega_forces = Forces(applied=1, drag=0.8)
+        self.speed_forces = Forces(applied=0.3, drag=0.2)
+        self.omega_forces = Forces(applied=0.3, drag=0.2)
 
         #speeds themselves
         self.speed = 0
@@ -53,10 +54,11 @@ class Driver(AbstractMode):
         if "S" in self.keys_pressed:#down
             self.speed -= self.speed_forces.applied
         if "A" in self.keys_pressed:#left
-            self.omega += self.omega_forces.applied
-        if "D" in self.keys_pressed:#right
-            # print('driver turn right')
+            # print("Mirror turn left")
             self.omega -= self.omega_forces.applied
+        if "D" in self.keys_pressed:#right
+            # print("Mirror turn right")
+            self.omega += self.omega_forces.applied
         self.speed = self.drag(self.speed, self.speed_forces.drag)
         self.omega = self.drag(self.omega, self.omega_forces.drag)
         #deaccelerates items
@@ -70,4 +72,5 @@ class Driver(AbstractMode):
     def frame(self, frame):
         '''
         '''
+        frame = cv2.flip( frame, 1 )
         return frame
