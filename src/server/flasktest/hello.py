@@ -10,7 +10,8 @@ def index():
         key = request.form['key']
         action = request.form['action']
         print("KEY: ", key," ACTION:", action)
-    return render_template('index.html')
+    modes=['Driver', 'Drunk Driver', 'Line Follower']
+    return render_template('index.html', modes=modes)
 
 
 def gen():

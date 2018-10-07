@@ -22,7 +22,8 @@ def index():
         key = request.form['key']
         action = request.form['action']
         print("KEY: ", key," ACTION:", action)
-    return render_template('index.html')
+    modes="Driver,Line Follower,Drunk Driver,Mirror"
+    return render_template('index.html',modes=modes)
 
 # def process_frame():
 #     driver = Driver()

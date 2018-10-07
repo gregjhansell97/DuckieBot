@@ -4,11 +4,14 @@
 </head>
 <body>
     <h1>Video Steaming Demonstration</h1>
+    <p id='modes' style="display:none">{{ modes }}</p>
     <img src="{{ url_for('video_feed') }}">
 </body>
 </html>
 <script language="JavaScript">
     keysdown = [];
+    var modes = "{{modes}}".split(',');
+    console.log(modes);
     var keyboardMap = [
         "", // [0]
         "", // [1]
