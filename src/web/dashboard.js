@@ -1,10 +1,14 @@
-//Variables
+//Public Variables
 var wbutton = document.getElementById('w');
 var abutton = document.getElementById('a');
 var sbutton = document.getElementById('s');
 var dbutton = document.getElementById('d');
 var wheel = document.getElementById('steeringwheel');
 var wheelangle = 0;
+var mode = document.getElementById('mode');
+var currentmode = 0;
+var modes = ["Driver", "Drunk Driver", "Line Follower", "Mapping", "Mirror", "Mario Kart"];
+
 //Key Listener
 window.addEventListener('keydown', function (e) {
 	var key = e.keyCode ? e.keyCode : e.which;
@@ -14,7 +18,7 @@ window.addEventListener('keydown', function (e) {
 		wbutton.style.color = 'gray';
 		wbutton.style.borderColor = 'gray';
 	} 
-   //A key: rotate wheel -45 degrees
+   //A key: rotate wheel CCW
    if (key == 65) {
    	abutton.style.backgroundColor = 'white';
    	abutton.style.color = 'gray';
@@ -28,7 +32,7 @@ window.addEventListener('keydown', function (e) {
    	sbutton.style.color = 'gray';
    	sbutton.style.borderColor = 'gray';
    }
-   //D key: rotate wheel 45 degrees
+   //D key: rotate wheel CW
    if (key == 68) {
    	dbutton.style.backgroundColor = 'white';
    	dbutton.style.color = 'gray';
@@ -36,7 +40,17 @@ window.addEventListener('keydown', function (e) {
    	wheelangle += 1;
    	rotate(wheel, wheelangle);
    }
-})
+   	//Enter key: change mode
+   	if (key == 13){
+   		if (currentmode < modes.length - 1){
+   			currentmode += 1;
+   		}
+   		else {
+   			currentmode = 0;
+   		}
+   		mode.innerHTML = "Current Mode: " + modes[currentmode];
+   	}
+   })
 window.addEventListener('keyup', function (e) {
 	var key = e.keyCode ? e.keyCode : e.which;
 	//W key
@@ -68,7 +82,7 @@ window.addEventListener('keyup', function (e) {
 })
 function rotate(obj, angle) {
 	if (Math.abs(wheelangle) <= 15) {
-		obj.style.transform = "scale(.35) translate(-1250px,-1000px) rotate("+angle*5+"deg)";
+		obj.style.transform = "rotate("+angle*5+"deg)";
 	}
 	else {
 	}
@@ -84,6 +98,21 @@ function returnToZero(obj, dir) {
 		else if (wheelangle < 0) {
 			wheelangle += 1;
 		}
-		obj.style.transform = "scale(.35) translate(-1250px,-1000px) rotate("+wheelangle+"deg)";
+		obj.style.transform = "rotate("+wheelangle+"deg)";
 	}, 20);
 }
+
+//Clock
+(function () {
+
+	var clockElement = document.getElementById( "clock" );
+
+	function updateClock ( clock ) {
+		clock.innerHTML = new Date().toLocaleTimeString();
+	}
+
+	setInterval(function () {
+		updateClock( clockElement );
+	}, 1000);
+
+}());
