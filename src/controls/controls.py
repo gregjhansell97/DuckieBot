@@ -45,11 +45,11 @@ class Unicycle:
         self._calibration["offset_right"] = 0
         self._calibration["gain_right"] = 1
 
-        self.mh = Adafruit_MotorHAT(addr=0x60)
-        atexit.register(turnOffMotors)
+        self._mh = Adafruit_MotorHAT(addr=0x60)
+        atexit.register(self._turnOffMotors)
 
-        self.left_motor = mh.getMotor(1)
-        self.right_motor = mh.getMotor(2)
+        self._left_motor = self._mh.getMotor(1)
+        self._right_motor = self._mh.getMotor(2)
 
     def set_omega(self, omega):
         '''
@@ -58,7 +58,7 @@ class Unicycle:
         Args:
             omega(float): Rotational speed between -1 and 1. 0 is no turning, >0 is turning left
         '''
-        self.omega = omega
+        self._omega = omega
         self._set_motor_speed()
         ''' input (range?)'''
 
@@ -72,15 +72,15 @@ class Unicycle:
             speed(float): Tangential speed between -1 and 1. 0 is no tangential speed, >0 is forward
         '''
 
-        self.speed = speed
+        self._speed = speed
         self._set_motor_speed()
         ''' input (range?)'''
 
         pass
 
-    def turnOffMotors():
-        self.mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
-        self.mh.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
+    def _turnOffMotors(self):
+        self._left_motor.run(Adafruit_MotorHAT.RELEASE)
+        self._right_motor.run(Adafruit_MotorHAT.RELEASE)
 
     
 
@@ -90,24 +90,28 @@ class Unicycle:
         Ramps the motor speeds based on calibration values and maximum acceleration
         '''
         
-        speed_left = (self.speed / 2 + self.omega / 2)
-        speed_right = (self.speed / 2 - self.omega / 2)
+        speed_left = (self._speed / 2 - self._omega / 2)
+        speed_right = (self._speed / 2 + self._omega / 2)
         
 
         if speed_left > 0:
-            left_motor.setSpeed(speed_left*255)
-            left_motor.run(Adafruit_MotorHAT.FORWARD)
+            self._left_motor.setSpeed(int(speed_left*255))
+            self._left_motor.run(Adafruit_MotorHAT.FORWARD)
         elif speed_left == 0:
-            left_motor.setSpeed(0)
+            self._left_motor.setSpeed(0)
         else: # speed_left < 0
-            left_motor.setSpeed(-speed_left*255)
-            left_motor.run(Adafruit_MotorHAT.BACKWARD)
+            self._left_motor.setSpeed(int(-speed_left*255))
+            self._left_motor.run(Adafruit_MotorHAT.BACKWARD)
 
         if speed_right > 0:
-            right_motor.setSpeed(speed_right*255)
-            right_motor.run(Adafruit_MotorHAT.FORWARD)
+            self._right_motor.setSpeed(int(speed_right*255))
+            self._right_motor.run(Adafruit_MotorHAT.FORWARD)
         elif speed_right == 0:
-            right_motor.setSpeed(0)
+            self._right_motor.setSpeed(0)
         else: # speed_right < 0
-            right_motor.setSpeed(-speed_right*255)
-            right_motor.run(Adafruit_MotorHAT.BACKWARD)
+            self._right_motor.setSpeed(int(-speed_right*255))
+            self._right_motor.run(Adafruit_MotorHAT.BACKWARD)
+if __name__ == "__main__":
+    u = Unicycle()
+    u.set_speed(1)
+    time.sleep(1000)
