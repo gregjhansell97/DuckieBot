@@ -17,7 +17,8 @@ def gen():
 		ret, jpg = cv2.imencode('.jpg', frame)
 		yield (b'--jpgboundary\r\n'+
 			b'Content-Type: image/jpeg\r\n\r\n' + jpg.tostring() + b'\r\n')
-
+def frame_callback(frame):
+    
 
 @app.route('/video_feed')
 def video_feed():
