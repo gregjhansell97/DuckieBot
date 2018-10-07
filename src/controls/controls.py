@@ -1,6 +1,5 @@
 '''
-control.py runs the PWM code to drive the motors, and get input for a desired tangential and rotational speed
-
+runs the PWM code to drive the motors, and get input for a desired tangential and rotational speed
 '''
 
 '''
@@ -11,10 +10,10 @@ import time
 import atexit
 mh = Adafruit_MotorHAT(addr=0x60)
 
-class Control:
+class Unicycle:
     '''
     Controls the speed of the car based on desired tangential and rotational speed.
-    Motors are ramped rather than stepping between speeds 
+    Motors are ramped rather than stepping between speeds
 
     Attributes:
         _speed(float): Current tangential speed
@@ -25,7 +24,7 @@ class Control:
 
 
     def __init__(self,  motor_accel=0, speed=0, omega=0):
-        
+
         '''
         delete this constructor when you're done with it alex,
         keep variables lower case and under score dO nOT uSeD cAmeL cAsE
@@ -35,19 +34,19 @@ class Control:
             speed(float):
             omega(float):
         '''
-        
+
         self._speed = speed
         self._omega = omega
         self._motor_accel = motor_accel
-        
+
         self._calibration = {}
         self._calibration["offset_left"] = 0
         self._calibration["gain_left"] = 1
         self._calibration["offset_right"] = 0
         self._calibration["gain_right"] = 1
-        
+
         pass
-    
+
     def set_omega(self, omega):
         '''
         Set rotational speed
@@ -55,7 +54,7 @@ class Control:
         Args:
             omega(float): Rotational speed between -1 and 1. 0 is no turning, >0 is turning left
         '''
-        omega = 0 
+        omega = 0
         ''' input (range?)'''
 
         pass
@@ -65,12 +64,12 @@ class Control:
         Set car speed
 
         Args:
-            speed(float): Tangential speed between -1 and 1. 0 is no tangential speed, >0 is forward 
+            speed(float): Tangential speed between -1 and 1. 0 is no tangential speed, >0 is forward
         '''
-        
-        speed = 0 
+
+        speed = 0
         ''' input (range?)'''
-        
+
         pass
 
     def turnOffMotors():
@@ -80,7 +79,7 @@ class Control:
     atexit.register(turnOffMotors)
 
     def _set_motor_speed(self, speed_left, speed_right):
-        
+
         '''
         Ramps the motor speeds based on calibration values and maximum acceleration
 
@@ -91,7 +90,7 @@ class Control:
         '''
         speed_left = (self.speed / 2 + self.omega / 2)*self._calibration[gain left]
         speed_right = (self.speed / 2 - self.omega / 2)*self._calibration[gain right]
-        '''        
+        '''
         speed_left = 30
         speed_right = 40
         myMotor = mh.getMotor(1)

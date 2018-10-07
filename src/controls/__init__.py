@@ -1,6 +1,3 @@
-#from controls.control import Control
-from controls.debug_control import DebugControl 
+from controls.controls import Unicycle
 
-__all__ = ["DebugControl"]
-
-#__all__ = ["Control", "DebugControl"]
+__all__ = ["Unicycle"]
