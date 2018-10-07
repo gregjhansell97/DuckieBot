@@ -1,12 +1,6 @@
-<<<<<<< Updated upstream
 from modes.driver import Driver
-from modes.mirror import Mirror
-from modes.squid import Squid
+#from modes.drunk_driver import DrunkDriver
+#from modes.mirror import Mirror
 
-
-__all__ = ["Driver", "Mirror"]
-=======
-import modes
-
-__all__ = modes.__all__
->>>>>>> Stashed changes
+#__all__ = [Driver, DrunkDriver, Mirror]
+__all__ = [Driver]

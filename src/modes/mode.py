@@ -1,23 +1,20 @@
 #external modules
-from abc import ABC, abstractmethod
 import signal
 import sys
 from threading import Thread, Event
 
 '''
 '''
-class AbstractMode(ABC):
+class AbstractMode:
     '''
     '''
-    modes = {}
-    def __init__(self, name):
+    def __init__(self):
         '''
         '''
         self.thread = None
         self.initialized = True
         #list of keys currently being held down
         self.keys_pressed = set()
-        AbstractMode.modes[name] = self 
 
     def start(self):
         '''
@@ -60,12 +57,10 @@ class AbstractMode(ABC):
         else: #released
             self.keys_pressed.discard(key)
 
-    @abstractmethod
     def frame(self, frame):
         '''
         '''
         pass
-    @abstractmethod
     def tick(self):
         '''
         '''
