@@ -23,7 +23,7 @@ class Unicycle:
     '''
 
 
-    def __init__(self,  motor_accel=0, speed=0, omega=0):
+    def __init__(self, speed_ratio=0.7, speed=0, omega=0):
 
         '''
         delete this constructor when you're done with it alex,
@@ -37,7 +37,7 @@ class Unicycle:
 
         self._speed = speed
         self._omega = omega
-        self._motor_accel = motor_accel
+        self._speed_ratio = speed_ratio
 
         self._calibration = {}
         self._calibration["offset_left"] = 0.2
@@ -90,8 +90,8 @@ class Unicycle:
         Ramps the motor speeds based on calibration values and maximum acceleration
         '''
         
-        speed_left = (self._speed *0.7 - self._omega *0.3)
-        speed_right = (self._speed *0.7 + self._omega *0.3)
+        speed_left = (self._speed *self._speed_ratio - self._omega *(1-self._speed_ratio))
+        speed_right = (self._speed *self._speed_ratio + self._omega *(1-self._speed_ratio))
         
 
         if speed_left > 0:
