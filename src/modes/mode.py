@@ -9,13 +9,15 @@ from threading import Thread, Event
 class AbstractMode(ABC):
     '''
     '''
-    def __init__(self):
+    modes = {}
+    def __init__(self, name):
         '''
         '''
         self.thread = None
         self.initialized = True
         #list of keys currently being held down
         self.keys_pressed = set()
+        AbstractMode.modes[name] = self 
 
     def start(self):
         '''

@@ -6,20 +6,26 @@ from picamera.array import PiRGBArray
 import time
 
 #local modules
+<<<<<<< Updated upstream
 from modes import Driver
 from controls import Unicycle
 
 
 
 
+=======
+import modes
+from stubbed.controls import Unicycle
+>>>>>>> Stashed changes
 
 #globals "eyes roll but such is flask" -daemon the koala
+mode_modules = {m: modes.__dict__[m](modes.__dict__[m]) for m in modes.__all__}
 app = Flask(
     "__main__",
     static_folder="./gui/static",
     template_folder="./gui/templates")
 car = Unicycle()
-mode = Driver(car)
+mode = mode_modules.keys()[0]
 mode.start()
 
 @app.route('/', methods=['GET'])
@@ -30,8 +36,8 @@ def index():
     Returns:
         Template: view of index.html
     '''
-    modes=["Driver","LineFollower","DrunkDriver","Mirror"]
-    return render_template('index.html',modes=modes)
+    modes_names=mode_modules.values()
+    return render_template('index.html',modes=modes_names)
 
 @app.route('/key_action', methods=['POST'])
 def key_action():
@@ -48,8 +54,11 @@ def change_mode():
     '''
     '''
     if request.method == 'POST':
-        mode = request.form['mode']
-        print("mode: ",mode)
+        mode_name = request.form['mode']
+        mode.stop()
+        mode = mode_modules[mode_name]
+        mode.start()
+        print("mode: ",mode_name)
     return '';
 
 def process_frame():
