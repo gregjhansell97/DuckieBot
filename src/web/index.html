@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-
+	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-
+	<div class="dashboard">
+		<div id="dashcolor"></div>
+		<svg class="steeringwheel" viewBox="0 0 150 150">
+			<g id="layer1">
+				<circle
+				r="20"
+				cy="22"
+				cx="22"
+				id="path3684"
+				style="opacity:1;fill:transparent;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+				<path
+				id="path4493"
+				d="m 2,22 c 20,0 20,20 20,20 0,0 0,-20 20,-20 z"
+				style="fill:#000000;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1" />
+			</g>
+		</svg>
+		<button class="steeringbutton" id="w">W</button>
+		<button class="steeringbutton" id="a">A</button>
+		<button class="steeringbutton" id="s">S</button>
+		<button class="steeringbutton" id="d">D</button>
+	</div>
+	<script src="dashboard.js"></script>
 </body>
 </html>
