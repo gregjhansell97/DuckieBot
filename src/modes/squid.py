@@ -86,6 +86,6 @@ class Squid(AbstractMode):
         
         # print(os.getcwd())
         # print (Path('.'))
-        added_image = cv2.addWeighted(background,0.5,overlay,0.5,0)
+        added_image = cv2.addWeighted(background,0.7,overlay,0.3,0)
 
         return added_image
