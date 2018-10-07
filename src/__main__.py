@@ -1,19 +1,27 @@
 #!/usr/bin/env python
 from modes import Driver
+from controls import DebugControl
 from flask import Flask, render_template, request, Response
 import cv2
 from opencvutils import Camera
-from picamera import PiCamera
-from picamera.array import PiRGBArray
+try:
+    from picamera import PiCamera
+    from picamera.array import PiRGBArray
+except ModuleNotFoundError:
+    pass
 import time
+
 app = Flask(__name__)
+car = DebugControl()
+driver = Driver(car)
 
 @app.route('/', methods=['GET'])
 def index():
     '''
     Routes for index, serves main page
    
-    Returns: view of index.html
+    Returns: 
+        Template: view of index.html
     '''    
     modes=["Driver","Line Follower","Drunk Driver","Mirror"]
     return render_template('index.html',modes=modes)
@@ -22,8 +30,8 @@ def index():
 def key_action():
     if request.method == 'POST':
         key = request.form['key']
-        action = request.form['action']
-        print("KEY: ", key," ACTION:", action)
+        pressed = request.form['action']
+        driver.set_input(key, pressed)
     return '';
 
 @app.route('/change_mode', methods=['POST'])
@@ -36,12 +44,7 @@ def change_mode():
 def process_frame():
     '''
     Function to process camera frames continuously and send them to the app
-    
-    Returns: no return value, constantly yields jpg images to front end
     '''
-    driver = Driver()
-    #frame = driver.frame(frame)
-
     # initialize the camera and grab a reference to the raw camera capture
     camera = PiCamera(framerate=32, resolution=(640, 480))
     rawCapture = PiRGBArray(camera, size=(640, 480))
@@ -53,7 +56,7 @@ def process_frame():
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         # grab the raw NumPy array representing the image, then initialize the timestamp
         # and occupied/unoccupied text
-        image = frame.array
+        image = driver.frame(frame).array
         # show the frame
         ret, jpg = cv2.imencode('.jpg', image)
         yield (b'--jpgboundary\r\n'+
@@ -75,7 +78,8 @@ def video_feed():
     '''
     Route for video feed
     
-    Returns: response to front end after calling process_frame function.
+    Returns: 
+        Response: response to front end after calling process_frame function.
     '''
     return Response(process_frame(),
         mimetype='multipart/x-mixed-replace; boundary=--jpgboundary')

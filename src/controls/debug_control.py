@@ -2,7 +2,7 @@
 control_debug.py is used for testing code that call control.py. Rather than controlling any motors, this
 class simply prints out when its two public funtions are called.
 '''
-class ControlDebug:
+class DebugControl:
     '''
     Prints out when set_omega() or set_speed() are called
 

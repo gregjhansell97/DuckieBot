@@ -35,10 +35,11 @@ class Control:
             speed(float):
             omega(float):
         '''
+        
         self._speed = speed
         self._omega = omega
         self._motor_accel = motor_accel
-
+        
         self._calibration = {}
         self._calibration["offset_left"] = 0
         self._calibration["gain_left"] = 1
