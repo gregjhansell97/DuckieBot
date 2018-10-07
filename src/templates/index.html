@@ -10,7 +10,8 @@
 </html>
 <script language="JavaScript">
     keysdown = [];
-    var modes = "{{modes}}".split(',');
+    // var modes = "{{modes}}".split(',');
+    var modes = JSON.parse('{{ modes | tojson | safe}}');
     console.log(modes);
     var keyboardMap = [
         "", // [0]
@@ -301,5 +302,6 @@
             xhttp.send("action=up&key=" + chr);
         
     })
+    
 
 </script>
