@@ -4,6 +4,7 @@ body, html {
 	max-height:100%;
 	overflow:hidden;
 	font-family: Arial;
+	background:url("checkered.png");
 }
 @font-face {
 	font-family: digital7;
@@ -129,10 +130,11 @@ button:focus {outline:0;}
 }
 
 #vidstream{
-	width: 70%;
+	position:absolute;
+	height: 65%;
+	width: 90%;
 	display: block;
-	margin-left: auto;
-    margin-right: auto;
+	left:5%;
 }
 
 #modes{
