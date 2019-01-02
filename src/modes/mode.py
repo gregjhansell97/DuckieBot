@@ -28,7 +28,6 @@ class AbstractMode:
                 Thread.__init__(self)
                 self.stop_flag = Event()
                 self._tick = tick
-                signal.signal(signal.SIGINT, self._on_exit)
             def stop(self):
                 self.stop_flag.set()
             def _on_exit(self, *args):
@@ -43,7 +42,7 @@ class AbstractMode:
     def stop(self):
         '''
         '''
-        if not "initialize" in self.__dict__:
+        if not "initialized" in self.__dict__:
             raise(Exception("AbstractMode Constructor Uninitialized"))
         if self.thread is not None:
             self.thread.stop()

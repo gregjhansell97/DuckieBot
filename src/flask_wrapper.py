@@ -13,13 +13,13 @@ stop_feed = False
 camera = None
 
 #globals "eyes roll but such is flask" -daemon the koala
-mode_modules = {m.__name__: m() for m in modes.__all__}
+car = Unicycle()
+mode_modules = {m.__name__: m(car) for m in modes.__all__}
 app = Flask(
     "__main__",
     static_folder="./gui/static",
     template_folder="./gui/templates")
-car = Unicycle()
-mode = list(mode_modules.values())[0]
+mode = mode_modules["Driver"]
 mode.start()
 
 @app.route('/', methods=['GET'])
@@ -30,8 +30,9 @@ def index():
     Returns:
         Template: view of index.html
     '''
-    modes_names=mode_modules.values()
-    return render_template('index.html',modes=modes_names)
+    mode_names=list(mode_modules.keys())
+    print(mode_names)
+    return render_template('index.html',modes=mode_names)
 
 @app.route('/key_action', methods=['POST'])
 def key_action():
@@ -52,6 +53,7 @@ def change_mode():
     global mode_modules
     if request.method == 'POST':
         mode_name = request.form['mode']
+        print("mode:", mode_name)
         mode.stop()
         mode = mode_modules[mode_name]
         mode.start()

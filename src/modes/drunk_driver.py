@@ -1,6 +1,6 @@
 #external modules
 from collections import namedtuple
-
+import cv2
 #local modules
 from modes.mode import AbstractMode
 
@@ -69,5 +69,5 @@ class DrunkDriver(AbstractMode):
     def frame(self, frame):
         '''
         '''
-        blur = cv2.GaussianBlur(frame,(20,20),0)
-        return blur
+        #blur = cv2.GaussianBlur(frame,(20,20),0)
+        return frame
