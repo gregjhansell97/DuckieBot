@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    Setup file for duckiebot.
+    Setup file for duckie_bot.
 
     This file was generated with PyScaffold 3.0.3.
     PyScaffold helps you to put up the scaffold of your new Python project.
@@ -14,9 +14,9 @@ from setuptools import setup
 # Add here console scripts and other entry points in ini-style format
 entry_points = """
 [console_scripts]
-# script_name = duckiebot.module:function
+# script_name = duckie_bot.module:function
 # For example:
-# fibonacci = duckiebot.skeleton:run
+# fibonacci = duckie_bot.skeleton:run
 """
 
 
