@@ -1,4 +1,4 @@
-from duckie_bot.cameras.camera import AbstractCamera
+from duckie_bot.cameras.camera import Camera
 try:
     from picamera import PiCamera
     from picamera.array import PiRGBArray
@@ -6,11 +6,11 @@ except ImportError:
     pass
 import time
 
-class RPiCamera(AbstractCamera):
+class RPiCamera(Camera):
     '''
     '''
     def __init__(self, framerate=32, resolution=(640, 480)):
-        AbstractCamera.__init__(self)
+        Camera.__init__(self)
         self.framerate = framerate
         self.resolution = resolution
         self.camera = None
@@ -41,7 +41,7 @@ class RPiCamera(AbstractCamera):
         for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
             if self.stop_feed:
                 break
-            
+
             image =  mode.frame(frame.array)
             ret, jpg = cv2.imencode(".jpg", image)
             yield (b'--jpgboundary\r\n' + b'Content-Type: image/jpeg\r\n\r\n' + jpg.tostring() + b'\r\n')

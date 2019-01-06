@@ -1,12 +1,12 @@
 import cv2
 
-from duckie_bot.cameras.camera import AbstractCamera
+from duckie_bot.cameras.camera import Camera
 
-class WebCamera(AbstractCamera):
+class WebCamera(Camera):
     '''
     '''
     def __init__(self, framerate=32, resolution=(640, 480), mode=None):
-        AbstractCamera.__init__(self)
+        Camera.__init__(self)
         self.framerate = framerate
         self.resolution = resolution
         self.raw_capture = cv2.VideoCapture(0)
