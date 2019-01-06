@@ -2,9 +2,6 @@
 import os
 from flask import Flask, render_template, request, Response
 
-#local modules
-import duckie_bot.modes
-
 class DuckieServer(Flask):
     '''
     used to generate a singleton instance below that uses modes, camera, and car
