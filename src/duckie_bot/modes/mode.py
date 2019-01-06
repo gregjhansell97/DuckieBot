@@ -51,7 +51,7 @@ class AbstractMode:
     def set_input(self, key, pressed):
         '''
         '''
-        if pressed.lower() == "true": #pressed
+        if pressed:
             self.keys_pressed.add(key)
         else: #released
             self.keys_pressed.discard(key)

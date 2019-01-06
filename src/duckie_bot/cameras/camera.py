@@ -6,7 +6,7 @@ class Camera:
         '''
         self.camera=None
 
-    def process_frame(self, mode):
+    def process_frame(self):
         '''
         <description>
 
