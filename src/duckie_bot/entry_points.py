@@ -9,11 +9,12 @@ def debug_modes():
     debug_car = DebugCar()
     web_camera = WebCamera()
     duckie_server.run(
-        car=debug_car, 
+        host="0.0.0.0",
+        port=9694,
+        car=debug_car,
         camera=web_camera,
         mode_modules=modes.__all__
     )
 
 def run_modes():
     pass
-
