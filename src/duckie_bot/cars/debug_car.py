@@ -6,4 +6,4 @@ class DebugCar(Car):
         Car.__init__(self)
 
     def refresh_motor_speed(self, speed, omega):
-        print("speed:{:1.4f}    omega:{:1.4f}".format(speed, omega))
+        print("speed: {:7.4f}    omega: {:7.4f}".format(speed, omega))
