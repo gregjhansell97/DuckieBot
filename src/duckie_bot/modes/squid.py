@@ -4,15 +4,15 @@ import cv2, os, random
 from pathlib import Path
 
 #local modules
-from duckie_bot.modes.mode import AbstractMode
+from duckie_bot.modes.mode import Mode
 
-class Squid(AbstractMode):
+class Squid(Mode):
     '''
     '''
-    def __init__(self, car=None):
+    def __init__(self, camera=None, car=None):
         '''
         '''
-        AbstractMode.__init__(self)
+        Mode.__init__(self, camera=camera, car=car)
 
         #forces applied to speeds
         Forces = namedtuple("Forces", ["applied", "drag"])
@@ -22,9 +22,6 @@ class Squid(AbstractMode):
         #speeds themselves
         self.speed = 0
         self.omega = 0
-
-        #abstraction to hardware
-        self.car = car
 
         #self.imgpath = random.choice([x for x in os.listdir("gui/static/ink_img")
         #       if os.path.isfile(os.path.join("gui/static/ink_img", x))])
@@ -46,21 +43,20 @@ class Squid(AbstractMode):
         else:
             return min(speed, 1)
 
-    def tick(self):
+    def tick(self, keys_pressed):
         '''
         '''
         #starting values (to be compared later)
         start_speed = self.speed
         start_omega = self.omega
 
-        if "W" in self.keys_pressed:#up
+        if "W" in keys_pressed:#up
             self.speed += self.speed_forces.applied
-        if "S" in self.keys_pressed:#down
+        if "S" in keys_pressed:#down
             self.speed -= self.speed_forces.applied
-        if "A" in self.keys_pressed:#left
+        if "A" in keys_pressed:#left
             self.omega += self.omega_forces.applied
-        if "D" in self.keys_pressed:#right
-            print('squid turn right')
+        if "D" in keys_pressed:#right
             self.omega -= self.omega_forces.applied
         self.speed = self.drag(self.speed, self.speed_forces.drag)
         self.omega = self.drag(self.omega, self.omega_forces.drag)
@@ -83,7 +79,7 @@ class Squid(AbstractMode):
         # background = cv2.imread('gui/static/ink_img/ink8.png')
         # background = cv2.flip( background, 1 )
         # cv2.imshow('image',background)
-        
+
         # print(os.getcwd())
         # print (Path('.'))
         # added_image = cv2.addWeighted(background,0.7,overlay,0.3,0)

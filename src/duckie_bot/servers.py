@@ -13,10 +13,8 @@ class DuckieServer(Flask):
     start the server; most state variables are none until this happens
 
     Attributes:
-        camera(duckie_rodeo.cameras.Camera): camera feed
         modes(dict): instances of the modes key off of class name
-        _mode(duckie_rodeo.Mode): the _set_mode method is needed to set the mode
-           never write to this state variable directly
+        active_mode(duckie_rodeo.Mode): <DOCUMENT ME>
     '''
     def __init__(self):
         # calls super constructor
@@ -27,27 +25,8 @@ class DuckieServer(Flask):
             static_folder=path + "/gui/static",
             template_folder=path + "/gui/templates")
         # state variables initially empty
-        self.camera = None
         self.modes = []
-        self._mode = None
-
-    def _set_mode(self, mode):
-        '''
-        changes the mode field variable
-
-        Args:
-            mode(duckie_rodeo.Mode): the mode to be changed to
-        '''
-        #TODO add some error handling here
-        if self._mode is mode: #no change needed
-            return
-        elif self._mode is None:
-            self._mode = mode
-        else:
-            self._mode.stop()
-            self._mode = mode
-        self.camera.mode = mode
-        self._mode.start()
+        self.active_mode = None
 
     def get_mode_names(self):
         '''
@@ -63,7 +42,8 @@ class DuckieServer(Flask):
         Args:
             mode_name(str): the name of the mode class
         '''
-        self._set_mode(self.modes[mode_name])
+        self.active_mode = self.modes[mode_name]
+        self.active_mode.start()
 
     def key_action(self, key, pressed):
         '''
@@ -73,17 +53,16 @@ class DuckieServer(Flask):
             key(str): the character on the keyboard
             pressed(bool): key pressed or depressed
         '''
-        self._mode.set_input(key, pressed)
+        self.active_mode._set_input(key, pressed)
 
     def process_frame(self):
         '''
-        uses the camera to return video feed; camera frame may be modified by
-        the active mode
+        uses the active_mode to return video feed
 
         Returns:
             generator(bytes): yields image data over to the requestor
         '''
-        return self.camera.process_frame()
+        return self.active_mode._process_frame()
 
     def run(
         self,
@@ -102,10 +81,14 @@ class DuckieServer(Flask):
             camera(duckie_rodeo.cameras.Camera): camera feed
             modes(dict): instances of the modes key off of class name
         '''
-        self.camera = camera
-        self.modes = {m.__name__: m(car) for m in mode_modules}
-        self._set_mode(next(iter(self.modes.values())))
+        #TODO check if modes is instance
+        self.modes = {
+            m.__name__: m(camera=camera,car=car)
+            for m in mode_modules}
+        self.active_mode = next(iter(self.modes.values()))
 
+        #start up thread and server
+        self.active_mode.start()
         Flask.run(self, host=host, port=port)
 
 duckie_server = DuckieServer()

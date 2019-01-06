@@ -2,15 +2,15 @@
 from collections import namedtuple
 
 #local modules
-from duckie_bot.modes.mode import AbstractMode
+from duckie_bot.modes.mode import Mode
 
-class Driver(AbstractMode):
+class Driver(Mode):
     '''
     '''
-    def __init__(self, car=None):
+    def __init__(self, camera=None, car=None):
         '''
         '''
-        AbstractMode.__init__(self)
+        Mode.__init__(self, camera=camera, car=car)
 
         #forces applied to speeds
         Forces = namedtuple("Forces", ["applied", "drag"])
@@ -41,20 +41,17 @@ class Driver(AbstractMode):
         else:
             return min(speed, 1)
 
-    def tick(self):
-        '''
-        '''
-        #starting values (to be compared later)
+    def tick(self, keys_pressed):
         start_speed = self.speed
         start_omega = self.omega
 
-        if "W" in self.keys_pressed:#up
+        if "W" in keys_pressed:#up
             self.speed += self.speed_forces.applied
-        if "S" in self.keys_pressed:#down
+        if "S" in keys_pressed:#down
             self.speed -= self.speed_forces.applied
-        if "A" in self.keys_pressed:#left
+        if "A" in keys_pressed:#left
             self.omega += self.omega_forces.applied
-        if "D" in self.keys_pressed:#right
+        if "D" in keys_pressed:#right
             # print('driver turn right')
             self.omega -= self.omega_forces.applied
         self.speed = self.drag(self.speed, self.speed_forces.drag)
@@ -68,6 +65,4 @@ class Driver(AbstractMode):
             self.car.set_omega(self.omega)
 
     def frame(self, frame):
-        '''
-        '''
         return frame
