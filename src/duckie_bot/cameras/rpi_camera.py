@@ -1,7 +1,9 @@
-from .cameras.camera import AbstractCamera
-
-from picamera import PiCamera
-from picamera.array import PiRGBArray
+from duckie_bot.cameras.camera import AbstractCamera
+try:
+    from picamera import PiCamera
+    from picamera.array import PiRGBArray
+except ImportError:
+    pass
 import time
 
 class RPiCamera(AbstractCamera):

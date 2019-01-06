@@ -1,4 +1,4 @@
-import Car
+from duckie_bot.cars.car import Car
 
 class DebugCar(Car):
 

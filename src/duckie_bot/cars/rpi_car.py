@@ -1,8 +1,12 @@
-from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+try:
+    from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
+except ImportError:
+    pass
+
 import time
 import atexit
 
-import Car
+from duckie_bot.cars.car import Car
 
 #unicycle model
 class RPiCar(Car):

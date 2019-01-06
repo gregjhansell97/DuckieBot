@@ -4,7 +4,7 @@ import cv2, os, random
 from pathlib import Path
 
 #local modules
-from modes.mode import AbstractMode
+from duckie_bot.modes.mode import AbstractMode
 
 class Squid(AbstractMode):
     '''
@@ -26,8 +26,8 @@ class Squid(AbstractMode):
         #abstraction to hardware
         self.car = car
 
-        self.imgpath = random.choice([x for x in os.listdir("gui/static/ink_img")
-               if os.path.isfile(os.path.join("gui/static/ink_img", x))])
+        #self.imgpath = random.choice([x for x in os.listdir("gui/static/ink_img")
+        #       if os.path.isfile(os.path.join("gui/static/ink_img", x))])
 
     def drag(self, speed, drag):
         if speed < -drag:
@@ -75,17 +75,17 @@ class Squid(AbstractMode):
     def frame(self, frame):
         '''
         '''
-        background = frame
+        # background = frame
         # self.imgpath='ink9.png'
         # print(self.imgpath)
-        overlay = cv2.imread('gui/static/ink_img/'+self.imgpath)
-        overlay = cv2.resize(overlay, (background.shape[1], background.shape[0]))
+        # overlay = cv2.imread('gui/static/ink_img/'+self.imgpath)
+        # overlay = cv2.resize(overlay, (background.shape[1], background.shape[0]))
         # background = cv2.imread('gui/static/ink_img/ink8.png')
         # background = cv2.flip( background, 1 )
         # cv2.imshow('image',background)
         
         # print(os.getcwd())
         # print (Path('.'))
-        added_image = cv2.addWeighted(background,0.7,overlay,0.3,0)
+        # added_image = cv2.addWeighted(background,0.7,overlay,0.3,0)
 
-        return added_image
+        return frame

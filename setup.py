@@ -14,9 +14,7 @@ from setuptools import setup
 # Add here console scripts and other entry points in ini-style format
 entry_points = """
 [console_scripts]
-# script_name = duckie_bot.module:function
-# For example:
-# fibonacci = duckie_bot.skeleton:run
+debug_modes = duckie_bot.entry_points:debug_modes
 """
 
 

@@ -2,7 +2,7 @@
 from collections import namedtuple
 
 #local modules
-from modes.mode import AbstractMode
+from duckie_bot.modes.mode import AbstractMode
 
 class Driver(AbstractMode):
     '''

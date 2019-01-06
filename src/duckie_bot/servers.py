@@ -1,13 +1,17 @@
 #external modules
+import os
 from flask import Flask, render_template, request, Response
 
 #local modules
-import modes
+import duckie_bot.modes
 
+
+
+path = os.path.dirname(os.path.realpath(__file__))
 app = Flask(
     "__main__",
-    static_folder="./gui/static",
-    template_folder="./gui/templates")
+    static_folder=path + "/gui/static",
+    template_folder=path + "/gui/templates")
 
 class DuckieServer:
     '''
@@ -17,47 +21,52 @@ class DuckieServer:
         camera (duckie_rodeo.cameras.AbstractCamera): camera feed
         modes (dict): key is the name of the mode, value is an instance of the mode class
     '''
-
     def __init__(self):
-        '''
-        '''
         self.camera = None
-        self.modes = {m.__name__: m() for m in modes.__all__}
-        self.mode = next(iter(modes.values()))
+        self.modes = []
+        self.mode = None
+
+    def _set_mode(self, mode):
+        #TODO add some error handling here
+        if self.mode is mode: #no change needed
+            return
+        elif self.mode is None:
+            self.mode = mode
+        else:
+            self.mode.stop()
+            self.mode = mode
+        self.camera.mode = mode
+        self.mode.start()
 
     def get_mode_names(self):
-        return self.modes.keys()
+        return list(self.modes.keys())
 
     def change_mode(self, mode_name):
-        next_mode = modes[mode_name]
-        if next_mode is self.mode:
-            return
-        self.mode.stop()
-        self.mode = modes[mode_name]
-        self.mode.start()
+        self._set_mode(self.modes[mode_name])
 
     def key_action(self, key, pressed):
         self.mode.set_input(key, pressed)
-        
 
     def process_frame(self):
-        return self.camera.process_frame(self.mode)
+        return self.camera.process_frame()
 
     def run(
         self, 
         host="0.0.0.0", 
         port=9694, 
         car=None, 
-        camera=None): 
+        camera=None,
+        mode_modules=[]):
         '''
         '''
         
         self.camera = camera
-        self.car = car
-        self.mode.start()
+        self.modes = {m.__name__: m(car) for m in mode_modules}
+        self._set_mode(next(iter(self.modes.values())))
+
         app.run(host=host, port=port)
 
-duckie_server = Server()
+duckie_server = DuckieServer()
 
 @app.route('/', methods=['GET'])
 def index():

@@ -3,7 +3,7 @@ from collections import namedtuple
 import cv2
 
 #local modules
-from modes.mode import AbstractMode
+from duckie_bot.modes.mode import AbstractMode
 
 class Mirror(AbstractMode):
     '''
