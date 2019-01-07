@@ -1,24 +1,29 @@
+#external modules
 import cv2
 
+#inhouse
 from duckie_bot.cameras.camera import Camera
 
 class WebCamera(Camera):
     '''
+    Camera instance for web-cams
+
+    Attributes:
+        raw_capture(cv2.RawCapture): raw video frame with cv2 camera
     '''
-    def __init__(self, framerate=32, resolution=(640, 480), mode=None):
-        Camera.__init__(self)
-        self.framerate = framerate
-        self.resolution = resolution
+    def __init__(self, mode=None):
+        Camera.__init__(
+            self,
+            mode=mode
+        )
         self.raw_capture = cv2.VideoCapture(0)
-        self.mode = mode
 
     def process_frame(self):
-        '''
-        '''
-        #check for blank mode
         while True:
             ret, frame = self.raw_capture.read()
-            frame = self.mode.frame(frame)
+            if self.mode is not None:
+                frame = self.mode.frame(frame)
             ret, jpg = cv2.imencode('.jpg', frame)
-            yield (b'--jpgboundary\r\n'+
-                b'Content-Type: image/jpeg\r\n\r\n' + jpg.tostring() + b'\r\n')
+            yield (b"--jpgboundary\r\nContent-Type: image/jpeg\r\n\r\n" +
+                   jpg.tostring() +
+                   b'\r\n')

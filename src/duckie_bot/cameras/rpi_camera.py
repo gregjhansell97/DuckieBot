@@ -8,18 +8,36 @@ import time
 
 class RPiCamera(Camera):
     '''
+    represents a streamable camera like one on a raspberry-pi or a web cam
+
+    Attributes:
+        framerate(int): number of frames per second
+        resolution((int, int)): quality/size of each frame
+        self.camera(PiCamera): the camera on the raspberry pi
+        self.raw_capture(PiRGBArray): raw frame data from the camera
+        self.stop_feed(bool): ends the camera feed when set to true
     '''
-    def __init__(self, framerate=32, resolution=(640, 480)):
-        Camera.__init__(self)
+    def __init__(self, framerate=32, mode=None, resolution=(640, 480)):
+        '''
+        Args:
+            framerate(int): number of frames per second
+            mode(duckie_bot.Mode): the active mode
+            resolution((int, int)): quality/size of each frame
+        '''
+        Camera.__init__(self, mode=mode)
         self.framerate = framerate
         self.resolution = resolution
         self.camera = None
-        self.rawCapture = None
+        self.raw_capture = None
         self.stop_feed = False
 
-    def restart(self):
+    def _restart(self):
         '''
+        resets the camera and raw_capture ensuring to stop the camera feed
+        before starting another one (may no longer be a problem). There is
+        atleast a 0.1 second pause
         '''
+        # TODO this method may no longer be needed
         if self.camera != None: #camera is active
             self.stop_feed = True
             time.sleep(0.2) #give time for camera to end feed
@@ -28,25 +46,27 @@ class RPiCamera(Camera):
 
         #initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera(framerate=self.framerate, resolution=self.resolution)
-        self.rawCapture = PiRGBArray(self.camera, size=self.resolution)
+        self.raw_capture = PiRGBArray(self.camera, size=self.resolution)
 
         #allow the camera time to warm up
         time.sleep(0.1)
 
-    def process_frame(self, mode):
-        '''
-        '''
-        self.restart()
+    def process_frame(self):
+        self._restart()
 
-        for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
-            if self.stop_feed:
-                break
-
-            image =  mode.frame(frame.array)
-            ret, jpg = cv2.imencode(".jpg", image)
-            yield (b'--jpgboundary\r\n' + b'Content-Type: image/jpeg\r\n\r\n' + jpg.tostring() + b'\r\n')
+        for frame in self.camera.capture_continuous(
+            self.raw_capture,
+            format="bgr",
+            use_video_port=True
+        ):
+            if self.stop_feed: break
+            processed_frame =  self.mode.frame(frame.array)
+            ret, jpg = cv2.imencode(".jpg", processed_frame)
+            yield (b"--jpgboundary\r\nContent-Type: image/jpeg\r\n\r\n" +
+                   jpg.tostring() +
+                   b'\r\n')
             #clear the stream in preparation for next frame
-            rawCapture.truncate(0)
+            raw_capture.truncate(0)
 #
 #
 # def process_frame():
