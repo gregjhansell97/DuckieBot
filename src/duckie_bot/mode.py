@@ -23,78 +23,51 @@ class _ControlThread(Thread):
     def run(self):
         while not self.stop_flag.wait(0.3):
             if self.mode is None: continue
-            self.mode.tick(self.mode._keys_pressed)
+            self.mode.tick()
 
 class Mode(ABC):
     '''
     abstract base class for all modes
 
     Attributes:
-        _initialized(bool): checks if __init__ was called
-        _keys_pressed(set): a set of keys currently being pressed
-        camera(duckie_rodeo.cameras.Camera): camera feed
+        camera(duckie_rodeo.Camera): camera feed
+        keys_pressed(set): a set of keys currently being pressed
         car(duckie_rode.cars.Car): car provided to the mode to drive with
 
-    Static Attributes:
+    Static Private Attributes: "we're all adults here" - daemon the koala
         _thread(_ControlThread): single thread running the mode provided to it
     '''
 
     _thread = None
 
-    def __init__(self, camera=None, car=None):
-        '''
-        Args:
-            camera(duckie_rodeo.cameras.Camera): camera feed
-            car(duckie_rode.cars.Car): car provided to the mode to drive with
-        '''
-        self._initialized = True
-        self._keys_pressed = set()
-        self.camera = camera
-        self.car = car
-
-    def _check_initialization(self):
-        '''
-        verifies that the base class's constructor was invoked
-
-        Raises:
-           Mode Constructor Uninitialized
-        '''
-        if not "_initialized" in self.__dict__:
-            raise(Exception("Mode Constructor Uninitialized"))
-
     def _set_input(self, key, pressed):
         '''
-        recieved update on keys pressed and modifies self._keys_pressed
+        recieved update on keys pressed and modifies self.keys_pressed
         accordingly
 
-        Raises:
-            Mode Constructor Uninitialized
+        Args:
+            key(str): the key that is currently being pressed or depressed
+            pressed(bool): whether the key is pressed or depressed
         '''
-        self._check_initialization()
         if pressed:
-            self._keys_pressed.add(key)
+            self.keys_pressed.add(key)
         else: #key is depressed
-            self._keys_pressed.discard(key)
+            self.keys_pressed.discard(key)
 
-    def _process_frame(self):
-        '''
-        uses the camera to return video feed; camera frame may be modified by
-        the active mode
-
-        Returns:
-            generator(bytes): yields image data over to the requestor
-        '''
-        return self.camera.process_frame()
-
-    def start(self):
+    def start(self, camera=None, car=None):
         '''
         starts a mode by spinning up a thread, stops any other mode threads
-        currently active
+        currently active; leaving as public so user could override camera and
+        car settings passed into it; should still call this instance of start
+        in their implementation
 
-        Raises:
-            Mode Constructor Uninitialized
+        Args:
+            camera(duckie_bot.Camera): camera feed
+            car(duckie_bot.Car): car that controls duckie_bot
         '''
-        self._check_initialization()
+        self.keys_pressed = set()
+        self.camera = camera
+        self.car = car
         if Mode._thread is None:
             Mode._thread = _ControlThread(mode=self)
             Mode._thread.start()
@@ -115,12 +88,9 @@ class Mode(ABC):
         pass
 
     @abstractmethod
-    def tick(self, keys_pressed):
+    def tick(self):
         '''
         when thread is currently active tick method is called on loop passing in
         keys pressed
-
-        Args:
-            keys_pressed(set): a set of keys currently being pressed
         '''
         pass

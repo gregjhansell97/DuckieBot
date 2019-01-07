@@ -10,8 +10,10 @@ class DuckieServer(Flask):
     start the server; most state variables are none until this happens
 
     Attributes:
+        camera(duckie_rodeo.Camera): camera feed
+        car(duckie_rode.Car): car provided to the mode to drive with
         modes(dict): instances of the modes key off of class name
-        active_mode(duckie_rodeo.Mode): <DOCUMENT ME>
+        active_mode(duckie_rodeo.Mode): current mode running on thread
     '''
     def __init__(self):
         # calls super constructor
@@ -22,6 +24,8 @@ class DuckieServer(Flask):
             static_folder=path + "/gui/static",
             template_folder=path + "/gui/templates")
         # state variables initially empty
+        self.camera = None
+        self.car = None
         self.modes = []
         self.active_mode = None
 
@@ -40,7 +44,7 @@ class DuckieServer(Flask):
             mode_name(str): the name of the mode class
         '''
         self.active_mode = self.modes[mode_name]
-        self.active_mode.start()
+        self.active_mode.start(camera=self.camera, car=self.car)
 
     def key_action(self, key, pressed):
         '''
@@ -59,7 +63,7 @@ class DuckieServer(Flask):
         Returns:
             generator(bytes): yields image data over to the requestor
         '''
-        return self.active_mode._process_frame()
+        return self.active_mode.camera.process_frame()
 
     def run(
         self,
@@ -79,13 +83,15 @@ class DuckieServer(Flask):
             modes(dict): instances of the modes key off of class name
         '''
         #TODO check if modes is instance
+        self.car = car
+        self.camera = camera
         self.modes = {
-            m.__name__: m(camera=camera,car=car)
+            m.__name__: m()
             for m in mode_modules}
         self.active_mode = next(iter(self.modes.values()))
 
         #start up thread and server
-        self.active_mode.start()
+        self.active_mode.start(camera=camera, car=car)
         Flask.run(self, host=host, port=port)
 
 duckie_server = DuckieServer()
