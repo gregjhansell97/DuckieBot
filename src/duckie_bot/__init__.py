@@ -2,7 +2,9 @@
 from pkg_resources import get_distribution, DistributionNotFound
 
 from duckie_bot.mode import Mode
-__all__ = ["Mode"]
+from duckie_bot.cameras import Camera
+from duckie_bot.cars import Car
+__all__ = ["Mode", "Camera", "Car"]
 
 try:
     # Change here if project is renamed and does not equal the package name
