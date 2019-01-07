@@ -46,23 +46,37 @@ help(duckie_bot.Car)
 ```
 
 ## Running Modes
-To run a single mode from a file:
+
+### Single Mode
 
 ```bash
 duckie mode_1.py
 ```
 
-To run multiple modes and switch between them:
-
+### Multiple Modes
 ```bash
 duckie *.py
 ```
 
-To run a package that has modes in it:
+### Python Package
 
 ```bash
 duckie directory_to_package
 ```
+
+### On Success
+A server will be running in the terminal with output similar to this:
+```terminal
+ * Serving Flask app "debug_modes" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:9694/ (Press CTRL+C to quit)
+```
+
+The last line of output has ```http://0.0.0.0:9694/```. ```0.0.0.0``` means any and all available hostnames (ex: localhost, 127.0.0.1, and others). ```9696``` is the port number. To view the gui, go to a browser on the same network and use the link: ``` <hostname>:<port> ```
+
 The way that ```duckie``` handles running modes varies. The pi interacts with a motor hat and pysically moves. A computer interacts with a stubbed car that prints out it's actions.
 
 ## Notes
