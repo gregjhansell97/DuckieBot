@@ -43,14 +43,21 @@ def get_modes(filename):
 
 def get_files():
     parser = argparse.ArgumentParser()
-    parser.add_argument("files", nargs="+")
+    parser.add_argument(
+        "files",
+        type=str,
+        nargs="+",
+        help='''mode files to be run; regular expressions and packages can be
+                used; ex: *.py''')
     return parser.parse_args().files
 
-def debug_modes():
+def parse_arguments():
     #grabs all file names (no repeats)
     files = reduce(lambda s,l: s|l, [set(glob.glob(f)) for f in get_files()])
-    modes = reduce(lambda acc,l: acc+l, [get_modes(Path(fn)) for fn in files])
+    return reduce(lambda acc,l: acc+l, [get_modes(Path(fn)) for fn in files])
 
+def debug_modes():
+    modes = parse_arguments()
     classes = []
     debug_car = DebugCar()
     web_camera = WebCamera()
