@@ -22,7 +22,6 @@ def import_module(file):
     if spec is None: #likely a package import
         #need to add path to package to sys.path
         sys.path.append(str(file/".."))
-        print(sys.path)
         return __import__(file.name)
     m = importlib.util.module_from_spec(spec)
 ################################################################################
