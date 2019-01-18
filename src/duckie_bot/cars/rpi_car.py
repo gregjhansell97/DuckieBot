@@ -17,16 +17,14 @@ class RPiCar(Car):
     Attributes:
         speed_ratio
     '''
-    def __init__(self, speed_ratio):
+    def __init__(self):
         Car.__init__(self)
-
-        self.speed_ratio = speed_ratio
 
         self._calibration = {}
         self._calibration["offset_left"] = 0.2
-        self._calibration["gain_left"] = 1
+        self._calibration["gain_left"] = 0.8
         self._calibration["offset_right"] = 0.2
-        self._calibration["gain_right"] = 1
+        self._calibration["gain_right"] = 0.8
 
         self._mh = Adafruit_MotorHAT(addr=0x60)
         atexit.register(self._turn_off_motors)

@@ -13,11 +13,11 @@ class Car:
         keep variables lower case and under score dO nOT uSeD cAmeL cAsE
 
         Args:
-            motor_accle(float):
+            speed_ratio(float):
             speed(float):
             omega(float):
         '''
-
+        self.speed_ratio = speed_ratio
         self.speed = speed
         self.omega = omega
 
