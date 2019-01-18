@@ -9,7 +9,7 @@ from inspect import isclass
 from pathlib import Path
 
 #inhouse
-from duckie_bot.cameras import WebCamera
+from duckie_bot.cameras import RPiCamera, WebCamera
 from duckie_bot.cars import RPiCar, DebugCar
 from duckie_bot.servers import duckie_server
 from duckie_bot.mode import Mode
@@ -18,7 +18,7 @@ def import_module(file):
     file = file.resolve()
     if len(file.name) > 0 and file.name[0] in ["_", "."]: #private
         return None
-    spec = importlib.util.spec_from_file_location(".", file)
+    spec = importlib.util.spec_from_file_location(".", str(file))
     if spec is None: #likely a package import
         #need to add path to package to sys.path
         sys.path.append(str(file/".."))
@@ -52,8 +52,8 @@ def get_files():
 
 def parse_arguments():
     #grabs all file names (no repeats)
-    files = reduce(lambda s,l: s|l, [set(glob.glob(f)) for f in get_files()])
-    return reduce(lambda acc,l: acc+l, [get_modes(Path(fn)) for fn in files])
+    files = reduce(lambda s,l: s|l, [set(glob.glob(f)) for f in get_files()], set())
+    return reduce(lambda acc,l: acc+l, [get_modes(Path(fn)) for fn in files], [])
 
 def debug_modes():
     modes = parse_arguments()
@@ -69,4 +69,15 @@ def debug_modes():
     )
 
 def run_modes():
-    pass
+    modes = parse_arguments()
+    classes = []
+    car = RPiCar()
+    cam = RPiCamera()
+    duckie_server.run(
+        host="0.0.0.0",
+        port=9694,
+        car=car,
+        camera=cam,
+        mode_modules=modes
+    )
+

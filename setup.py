@@ -15,6 +15,7 @@ from setuptools import setup
 entry_points = """
 [console_scripts]
 debug_modes = duckie_bot.entry_points:debug_modes
+run_modes = duckie_bot.entry_points:run_modes
 """
 
 
