@@ -1,4 +1,5 @@
 from duckie_bot.cameras.camera import Camera
+import cv2
 try:
     from picamera import PiCamera
     from picamera.array import PiRGBArray
@@ -41,7 +42,7 @@ class RPiCamera(Camera):
         if self.camera != None: #camera is active
             self.stop_feed = True
             time.sleep(0.2) #give time for camera to end feed
-            camera.close()
+            self.camera.close()
             self.stop_feed = False
 
         #initialize the camera and grab a reference to the raw camera capture
@@ -66,7 +67,7 @@ class RPiCamera(Camera):
                    jpg.tostring() +
                    b'\r\n')
             #clear the stream in preparation for next frame
-            raw_capture.truncate(0)
+            self.raw_capture.truncate(0)
 #
 #
 # def process_frame():
